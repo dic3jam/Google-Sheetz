@@ -4,13 +4,13 @@
  * updates in another
  * @author Jim DiCesare
  * 
- * To use entanglement, add a javascript array in a random cell
+ * To use entangle, add a javascript array in a random cell
  * in your google sheet. This array must be in the following
  * format:
  * Cell1,Cell2 Cell3,Cell4 Cell5,Cell6
  * So sets of cells to entangle separated by a space, 
  * Cells to entangle separated by a comma
- * Seet this variable:*/
+ **************Set this variable:**********************/
  var entangleArray = "";
 /* to the cell that contains the array
  * Then, set a trigger for the entangleRunner 
@@ -21,7 +21,9 @@
 //in values by reference.... so here are some other globals
 //if entanglement was already initialized, will not run initEntanglementArray()
 var init = false;
+//your current sheet
 var sheet = SpreadsheetApp.getActiveSpreadsheet();
+//the array that will hold all Entangle objects
 var entanglements = []
 
 class Entangle {
@@ -44,6 +46,8 @@ class Entangle {
     if (this.cell1Val == "" && this.cell2Val == ""){
       this.cell1Val = 0;
       this.cell2Val = 0;
+      sheet.getRange(this.cell1Pos).setValue(this.cell1Val);
+      sheet.getRange(this.cell2Pos).setValue(this.cell2Val);
     } else if (this.cell1Val == "" && this.cell2Val != "") {
       this.cell1Val = this.cell2Val;
     } else if (this.cell2Val == "" && this.cell1Val != "") {
@@ -58,9 +62,9 @@ class Entangle {
    * to reflect
    */
    updateCell1() {
-      this.cell2Val = this.sheet.getValue(this.cell2Pos);
+      this.cell2Val = this._sheet.getRange(this.cell2Pos).getValue();
       this.cell1Val = this.cell2Val;
-      sheet.getRange(this.cell1Pos).setValue(this.cell1Val);
+      this._sheet.getRange(this.cell1Pos).setValue(this.cell1Val);
    }
 
   /* function updateCell2
@@ -68,9 +72,9 @@ class Entangle {
    * to reflect
    */
    updateCell2() {
-      this.cell1Val = this.sheet.getValue(this.cell1Pos);
+      this.cell1Val = this._sheet.getRange(this.cell1Pos).getValue();
       this.cell2Val = this.cell1Val;
-      sheet.getRange(this.cell2Pos).setValue(this.cell2Val);
+      this._sheet.getRange(this.cell2Pos).setValue(this.cell2Val);
    }
 }
 
@@ -79,7 +83,7 @@ class Entangle {
 function entangleRunner() {
   if(!init)
     entanglements = initEntangelementArray();
-  for(p in entanglements) {
+  for(var p of entanglements) {
     if(sheet.getRange(p.cell1Pos).getValue() != p.cell1Val) {
       p.updateCell2();
     } else if(sheet.getRange(p.cell2Pos).getValue() != p.cell2Val) {
