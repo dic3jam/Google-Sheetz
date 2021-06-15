@@ -11,7 +11,7 @@
  * So sets of cells to entangle separated by a space, 
  * Cells to entangle separated by a comma
  **************Set this variable:**********************/
- var entangleArray = "H1";
+ var entangleArray = "";
 /* to the cell that contains the array
  * Then, set a trigger for the entangleRunner 
  * function.
@@ -23,10 +23,9 @@ class Entangle {
    * if value in one but not the other, both set to 
    * that value else if both already have a value
    * value is set to cell1, else both set to 0
-   * @param cell1 - first cell to entangle
-   * @param cell2 - second cell to entangle
-   * @param sheet - the sheet this particular entanglement 
-   * set is for
+   * Can construct with 2 named locations (list being passed it)
+   * or receive a parsed JSON version of entangled cells
+   * returns the Entangle OR null if wrong number of arguments inputted
    */
    constructor(...args) {
     var sheet = SpreadsheetApp.getActiveSpreadsheet();
@@ -94,6 +93,7 @@ class Entangle {
    }
 }
 /***********************************************************************/
+//triggers
 
 function onOpen(e) {
   initEntangelementArray();
@@ -104,6 +104,14 @@ function onEdit(e) {
 }
 
 /***********************************************************************/
+//runner functions
+
+/* function entangleRunner
+ * Triggered by an Edit event, gets the JSON version of
+ * the Entanglement Array, checks the current state of the
+ * Entangled cells. If cell2 updated, it updates cell1 and vice
+ * versa
+ */
 function entangleRunner() { 
   sheet = SpreadsheetApp.getActiveSpreadsheet();
   var ens = parseEntangleJSON();
@@ -120,6 +128,12 @@ function entangleRunner() {
 
 /***********************************************************************/
 //constructs an array of Entanglements
+
+/* function initEntanglementArray
+ * Triggered by an Open event, initializes current entanglements or 
+ * constructs an new Entanglements array
+ * @return an array of Entangled objects
+ */
 function initEntangelementArray() {
  if(getAdjacentCell().getValue() == "")
     return parseEntangleList();
@@ -129,6 +143,16 @@ function initEntangelementArray() {
   }
 } 
 
+/* function parseEntangleList
+ * used to read in the initial entangled pairs
+ * cells to entangle are declared at the top of this file
+ * by setting the "entangleArray" variable to the cell with
+ * pairs constructed in the following format:
+ * A1,B1 C2,D2, E5,J6
+ * So cell comma cell space cell comma space .....
+ * Very important
+ * @return an array of Entangle objects
+ */
 function parseEntangleList() {
   var en = readArray();
   var ens = [];
@@ -139,6 +163,12 @@ function parseEntangleList() {
   return ens;
 }
 
+/* function parseEntangleJSON
+ * reads the cell adjacent to entangleArray 
+ * parses the content and builds a new Entangle
+ * object array 
+ * @return array of Entangle objects
+ */
 function parseEntangleJSON() {
   var cell = getAdjacentCell();
   var ob = JSON.parse(cell.getValue());
@@ -149,8 +179,12 @@ function parseEntangleJSON() {
   return ens;
 }
 
-//pulls in the list of cells that need to be entangled 
-//and returns it as an array
+/* function readArray
+ * pulls in the list of cells that need to be entangled 
+ * and returns it as an array that can interface with the Entangle
+ * constructor
+ * @return double array of cells[0-1][cellName]
+ */
 function readArray() {
   var i = SpreadsheetApp.getActiveSpreadsheet().getRange(entangleArray).getValue();
   var i = i.split(" ");
@@ -159,6 +193,10 @@ function readArray() {
   return i;
 }
 
+/* function getAdjacentCell
+ * gets the cell adjacent to the entangleArray cell
+ * used to store a stringified JSON version of the Entangle array
+ */
 function getAdjacentCell() {
   return SpreadsheetApp.getActiveSpreadsheet().getRange(entangleArray).offset(0,1);
 }
