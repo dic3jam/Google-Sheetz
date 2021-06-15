@@ -11,20 +11,11 @@
  * So sets of cells to entangle separated by a space, 
  * Cells to entangle separated by a comma
  **************Set this variable:**********************/
- var entangleArray = "";
+ var entangleArray = "H1";
 /* to the cell that contains the array
  * Then, set a trigger for the entangleRunner 
  * function.
  */
-
-//For some reason Google Sheets does not like passing
-//in values by reference.... so here are some other globals
-//if entanglement was already initialized, will not run initEntanglementArray()
-var init = false;
-//your current sheet
-var sheet = SpreadsheetApp.getActiveSpreadsheet();
-//the array that will hold all Entangle objects
-var entanglements = []
 
 class Entangle {
   /* constructor 
@@ -38,7 +29,7 @@ class Entangle {
    * set is for
    */
    constructor(cell1, cell2) {
-    this._sheet = sheet;
+    this._sheet = SpreadsheetApp.getActiveSpreadsheet();
     this.cell1Pos = cell1;
     this.cell2Pos = cell2;
     this.cell1Val = this._sheet.getRange(cell1).getValue();
@@ -46,14 +37,14 @@ class Entangle {
     if (this.cell1Val == "" && this.cell2Val == ""){
       this.cell1Val = 0;
       this.cell2Val = 0;
-      sheet.getRange(this.cell1Pos).setValue(this.cell1Val);
-      sheet.getRange(this.cell2Pos).setValue(this.cell2Val);
+      this._sheet.getRange(this.cell1Pos).setValue(this.cell1Val);
+      this._sheet.getRange(this.cell2Pos).setValue(this.cell2Val);
     } else if (this.cell1Val == "" && this.cell2Val != "") {
-      this.cell1Val = this.cell2Val;
+      this.updateCell1();
     } else if (this.cell2Val == "" && this.cell1Val != "") {
-      this.cell2Val = this.cell1Val;
+      this.updateCell2();
     } else {
-      this.cell2Val = this.cell1Val;
+      this.updateCell2();
     }
   }
 
@@ -68,7 +59,7 @@ class Entangle {
    }
 
   /* function updateCell2
-   * If cell1 has been updated, change cell1
+   * If cell1 has been updated, change cell2
    * to reflect
    */
    updateCell2() {
@@ -77,11 +68,23 @@ class Entangle {
       this._sheet.getRange(this.cell2Pos).setValue(this.cell2Val);
    }
 }
+/***********************************************************************/
+function getAdjacentCell() {
+  return SpreadsheetApp.getActiveSpreadsheet().getRange(entangleArray.getRow(), entangleArray.getColumn()+1);
+}
 
-;
-//main function for running entanglement
+function onOpen(e) {
+  initEntangelementArray();
+}
+
+function onEdit(e) {
+  entangleRunner();
+}
+
+/***********************************************************************/
 function entangleRunner() {
-  if(!init)
+  var entanglements = getEntangleArray();
+  if(!entanglements)
     entanglements = initEntangelementArray();
   for(var p of entanglements) {
     if(sheet.getRange(p.cell1Pos).getValue() != p.cell1Val) {
@@ -92,14 +95,24 @@ function entangleRunner() {
   }
 }
 
+//finds the stored entangleArray, if it exists
+function getEntangleArray() {
+  var cell = getAdjacentCell();
+  if(cell.getValue() == "")
+    return false;
+  else 
+    return JSON.parse(cell.getValue());
+}
+
+/***********************************************************************/
 //constructs an array of Entanglements
 function initEntangelementArray() {
   var en = readArray();
   var ens = [];
   for(var i = 0; i < en.length; i++) 
     ens.push(new Entangle(en[i][0], en[i][1]));
-  init = true;
-  return ens;
+  var cell = getAdjacentCell();
+  cell.setValue(JSON.stringify(ens));
 } 
 
 //pulls in the list of cells that need to be entangled 
