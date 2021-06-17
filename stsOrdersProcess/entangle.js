@@ -3,6 +3,7 @@
  * updated value in one also
  * updates in another
  * @author Jim DiCesare
+ * @email jimdicesare@gmail.com
  * 
  * To use entangle, add a javascript array in a random cell
  * in your google sheet. This array must be in the following
@@ -13,8 +14,6 @@
  **************Set this variable:**********************/
  var entangleArray = "";
 /* to the cell that contains the array
- * Then, set a trigger for the entangleRunner 
- * function.
  */
 
 class Entangle {
