@@ -8,12 +8,10 @@
 function onOpen(e) {
 	var nSheet = SpreadsheetApp.getActiveSheet().getName();
 	//var nSheet = e.source.getName(); 
-	if(nSheet.includes("Blade")) {
-		SpreadsheetApp.getUi()
-		.createMenu("NavBar")
-		.addItem('Navigation', 'showSidebar')
-		.addToUi();
-	}
+	SpreadsheetApp.getUi()
+	.createMenu("NavBar")
+	.addItem('Navigation', 'showSidebar')
+	.addToUi();
 }
 
 function showSidebar() {
@@ -22,8 +20,7 @@ function showSidebar() {
 	SpreadsheetApp.getUi().showSidebar(sidebar);	
 }
 
-function goToIndex() {
-  var ind = 'indF';
+function goToIndex(ind) {
 	var indices = getIndices();	
 	var sheet = SpreadsheetApp.getActive();
 	sheet.setActiveRange(sheet.getRange(indices[ind]));
@@ -31,22 +28,22 @@ function goToIndex() {
 
 function getIndices() {
 	var indices = {
-		ind0: "A7",
-		ind1: "A39",
-		ind2: "A85",
-		ind3: "A115",
-		ind4: "A138",
-		ind5: "A185",
-		ind6: "A230",
-		ind7: "A273",
-		ind8: "A340",
-		ind9: "A352",
-		indA: "A384",
-		indB: "A397",
-		indC: "A424",
-		indD: "A450",
-		indE: "A476",
-		indF: "A505"
+		ind0: "A21",
+		ind1: "A52",
+		ind2: "A100",
+		ind3: "A125",
+		ind4: "A155",
+		ind5: "A202",
+		ind6: "A243",
+		ind7: "A288",
+		ind8: "A345",
+		ind9: "A369",
+		indA: "A392",
+		indB: "A413",
+		indC: "A440",
+		indD: "A464",
+		indE: "A490",
+		indF: "A521"
 	}
 	return indices;
 }
