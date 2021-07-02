@@ -22,7 +22,7 @@ class Entangle {
    * if value in one but not the other, both set to 
    * that value else if both already have a value
    * value is set to cell1, else both set to 0
-   * Can construct with 2 named locations (list being passed it)
+   * Can construct with 2 named locations (list being passed in)
    * or receive a parsed JSON version of entangled cells
    * returns the Entangle OR null if wrong number of arguments inputted
    */

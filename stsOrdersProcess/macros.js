@@ -4,11 +4,11 @@
 function copyTabs() {
   var spreadsheet = SpreadsheetApp.getActive();
   var appSheet = spreadsheet.getSheetByName('Application');
-  var bladeCount=appSheet.getRange("c6").getValue();
-  var spacerCount=appSheet.getRange("c7").getValue();
+  var bladeCount=appSheet.getRange("f12").getValue();
+  var spacerCount=appSheet.getRange("f13").getValue();
 
   // Where should first duplicated tab be moved to?
-  var TabSpot=4;
+  var TabSpot=7;
 
   // Make blade and spacer tabs
   for(var x=1;x<bladeCount;x++){
@@ -27,6 +27,7 @@ function copyTabs() {
     spreadsheet.moveActiveSheet(TabSpot++);
   }
   spreadsheet.setActiveSheet(appSheet);
+  mySheetName();
 
 };
 
@@ -85,3 +86,8 @@ function createNewQuote() {
   custTab.getRange("d3").setValue("");  
   custTab.getRange("c4").setValue("-");
 }
+
+function mySheetName() {
+  var key = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet().getName();
+  return key;
+  }
