@@ -13,12 +13,12 @@
  * Cells to entangle separated by a comma
  **************Set this variable:**********************/
  var entangleArray = [{
-                        set:"AG18",
+                        set:"AE8",
                         sheet:"Blade1"
                       },
                       {
-                        set:"",
-                        sheet:""
+                        set:"AG9",
+                        sheet:"Blade2"
                       }]
 
 /* to the cell that contains the array
@@ -113,9 +113,10 @@ class Entangle {
  */
 class Quantum {
   constructor(en) {
-    this.sheet = Spreadsheet.getSheetByName(en.sheet);
-    this.set = sheet.getRange(en.set)
-    this.offset = sheet.getRange(this.set.offset(1,0))
+    var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+    this.sheet = spreadsheet.getSheetByName(en.sheet);
+    this.set = this.sheet.getRange(en.set)
+    this.offset = this.set.offset(0,1);
   }
 }
 /***********************************************************************/
@@ -124,7 +125,7 @@ function onOpen(e) {
   for(var en of entangleArray) {
     var En = new Quantum(en);
     if (En.offset.getValue() == "") 
-      parseEntangleList(En)
+      parseEntangleList(En);
     else
       parseEntangleJSON(En);
   }
@@ -155,6 +156,7 @@ function entangleRunner(En) {
       En.sheet.getRange(p.cell2Pos).setValue(check1Val);
       p.cell1Val = check1Val;
       p.cell2Val = check1Val;
+      check2Val = check1Val;
     } 
     if(p.cell2Val != check2Val) {
       En.sheet.getRange(p.cell1Pos).setValue(check2Val);
@@ -196,7 +198,7 @@ function parseEntangleList(Q) {
  * @return array of Entangle objects
  */
 function parseEntangleJSON(Q) {
-  var ob = JSON.parse(Q.offset.getValue);
+  var ob = JSON.parse(Q.offset.getValue());
   var ens = [];
   for(var e of ob) {
     ens.push(new Entangle(Q.sheet, e.cell1Pos, e.cell2Pos, e.cell1Val, e.cell2Val));
