@@ -15,6 +15,7 @@ function copyTabs() {
     var sheet = spreadsheet.getSheetByName('Blade1').copyTo(spreadsheet);
     var tabName = 'Blade' + (x+1);
     sheet.setName(tabName);
+    sheet.getRange("A1").setValue(tabName);
     spreadsheet.setActiveSheet(sheet);
     spreadsheet.moveActiveSheet(TabSpot++);
   }
@@ -23,6 +24,7 @@ function copyTabs() {
     var sheet = spreadsheet.getSheetByName('Spacer1').copyTo(spreadsheet);
     var tabName = 'Spacer' + (x+1);
     sheet.setName(tabName);
+    sheet.getRange("A1").setValue(tabName);
     spreadsheet.setActiveSheet(sheet);
     spreadsheet.moveActiveSheet(TabSpot++);
   }
