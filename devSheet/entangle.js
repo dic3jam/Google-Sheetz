@@ -121,7 +121,7 @@ class Quantum {
 }
 /***********************************************************************/
 //triggers
-function onOpen(e) {
+function entangleOpen() {
   for(var en of entangleArray) {
     var En = new Quantum(en);
     if (En.offset.getValue() == "") 
@@ -131,7 +131,7 @@ function onOpen(e) {
   }
 }
 
-function onEdit(e) {
+function entangleEdit() {
   for(var en of entangleArray) {
     var En = new Quantum(en);
     entangleRunner(En);

@@ -5,7 +5,7 @@
  * @email jimdicesare@gmail.com
  */
 
-function onOpen(e) {
+function sideNavOpen() {
 	var nSheet = SpreadsheetApp.getActiveSheet().getName();
 	//var nSheet = e.source.getName(); 
 	SpreadsheetApp.getUi()

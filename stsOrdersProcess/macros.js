@@ -33,7 +33,7 @@ function copyTabs() {
 };
 
 // Delete 'Start' tab from quotes.
-function onOpen(e){
+function macrosOpen(){
   var ui = SpreadsheetApp.getUi();
   var spreadsheet = SpreadsheetApp.getActive();
   var startSheet = spreadsheet.getSheetByName('Start');
