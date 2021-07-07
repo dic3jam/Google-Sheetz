@@ -36,14 +36,14 @@ function getIndices() {
 		ind5: "A202",
 		ind6: "A243",
 		ind7: "A288",
-		ind8: "A345",
-		ind9: "A369",
-		indA: "A392",
-		indB: "A413",
-		indC: "A440",
-		indD: "A464",
+		ind8: "A340",
+		ind9: "A363",
+		indA: "A385",
+		indB: "A403",
+		indC: "A428",
+		indD: "A458",
 		indE: "A490",
-		indF: "A521"
+		indF: "A518"
 	}
 	return indices;
 }

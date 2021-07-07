@@ -12,14 +12,14 @@
  * So sets of cells to entangle separated by a space, 
  * Cells to entangle separated by a comma
  **************Set this variable:**********************/
- var entangleArray = [{
-                        set:"AE8",
-                        sheet:"Blade1"
+ var entangleArray = null;/*[{
+                        set:"",
+                        sheet:""
                       },
                       {
-                        set:"AG9",
-                        sheet:"Blade2"
-                      }]
+                        set:"",
+                        sheet:""
+                      }]*/
 
 /* to the cell that contains the array
  */
@@ -122,6 +122,8 @@ class Quantum {
 /***********************************************************************/
 //triggers
 function entangleOpen() {
+  if(entangleArray == null)
+    return;
   for(var en of entangleArray) {
     var En = new Quantum(en);
     if (En.offset.getValue() == "") 
