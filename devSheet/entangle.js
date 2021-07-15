@@ -103,9 +103,9 @@ class Entangle {
  * container for the current spreadsheet
  * the cell containing the entangle sets
  * 
- * Particle.sheet - A Spreadsheet object of the current sheet
- * Particle.set - A range object of the entangleArray cell
- * Particle.offset - Range of the offset cell (where JSON could or 
+ * Quantum.sheet - A Spreadsheet object of the current sheet
+ * Quantum.set - A range object of the entangleArray cell
+ * Quantum.offset - Range of the offset cell (where JSON could or 
  * would be)
  * 
  * @param en - the object containing the location of the 
