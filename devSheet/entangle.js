@@ -12,10 +12,10 @@
  * So sets of cells to entangle separated by a space, 
  * Cells to entangle separated by a comma
  **************Set this variable:**********************/
- var entangleArray = [{
+ var entangleArray = /*[{
                         set:"AE8",
                         sheet:"Blade1"
-                      }]/*,
+                      }],
                       {
                         set:"",
                         sheet:""
@@ -27,6 +27,19 @@
 /***********************************************************************/
 //Classes
 
+/* class EntangleList
+ * A list of entanglements as the user
+ * specifies
+ * 
+ * EntangleList.list - the physical list of Entangles
+ * EntangleList.sheet - the sheet object this applies to
+ * EntangleList.reRange - the cell to write out the JSON to
+ * 
+ * @param protoList - list of cells to entangle
+ * @param sheet - the current sheet this particular EntangleList 
+ * applies to
+ * @offset - the cell to write the JSON output to
+ */
 class EntangleList {
 
   constructor(protoList, sheet, offset) {  
@@ -39,17 +52,38 @@ class EntangleList {
     this.refRange = offset;
   }
 
+  /* function checkListValues
+   * iterate through the Entangles and run their 
+   * respective checkValue()
+   */
   checkListValues() {
     for(var entangle of this.list)
       entangle.checkValues(this.sheet);
   }
 
+  /* function toJSON()
+   * JSON string contains the list of entangles in JSON 
+   * (recursively stringifies), the name of the sheet,
+   * the refRange cell notation
+   */
   toJSON() {
     return { list: this.list, sheet: this.sheet.getSheetName(), refRange: this.refRange.getA1Notation() }
   }
 
 }
 
+/* class Entangle
+ * A list of the Range objects
+ * to entangle
+ * 
+ * Entangle.list - list of Range objects
+ * Entangle.value - the value all Range objects
+ * should reflect
+ * 
+ * @param proto - the set of cells to entangle
+ * @param sheet - sheet object of protos origin
+ * @param value - value of this entanglement
+ */
 class Entangle {
   constructor(proto, sheet, value = 0) {
     this.list = []
@@ -64,6 +98,13 @@ class Entangle {
     }
   }
 
+  /* function checkValues
+   * iterates through the cells in the entangle, 
+   * if a cell has a different value, call
+   * setValues to change the value of all cells
+   * in the Entangle
+   * @param sheet - the current sheet object
+   */
   checkValues(sheet) {
     for(var e of this.list) {
       var newVal = sheet.getRange(e.getA1Notation()).getValue();
@@ -75,12 +116,23 @@ class Entangle {
     }
   }
 
+  /* function setValues
+   * grabs each Range and changes 
+   * the value
+   * @param sheet - current sheet object
+   */
   setValues(sheet) {
     for(var e of this.list) {
       e.setValue(this.value);
     }
   }
 
+  /* function toJSON
+   * makes a new list of this
+   * that just captures the A1 notation of each
+   * Range, tacks on the value and 
+   * @return JSON representation of this
+   */
   toJSON() {
     var outList = []
     for(var e of this.list) {
@@ -110,6 +162,7 @@ class Quantum {
     this.set = this.sheet.getRange(en.set)
     this.offset = this.set.offset(0,1);
   }
+
 /* function makeProtoEntangle
  * pulls in the list of cells that need to be entangled 
  * and returns it as an array that can interface with the Entangle
@@ -127,6 +180,13 @@ class Quantum {
 /***********************************************************************/
 //triggers
 
+/* function entangleOpen
+ * called when the order form is first 
+ * opened finds the "entangleArray" if
+ * filled out, constructs the Entanglement
+ * and maintains state by writing a JSON
+ * representation to an offset cell
+ */
 function entangleOpen() {
   if(entangleArray == null)
     return;
@@ -144,6 +204,12 @@ function entangleOpen() {
   }
 }
 
+/* function entangleEdit
+ * called upon cell edit, iterates
+ * through the assigned entanglements
+ * and calls entangleRunner to update
+ * as necessary
+ */
 function entangleEdit() {
   for(var en of entangleArray) {
     var En = new Quantum(en);
@@ -155,7 +221,9 @@ function entangleEdit() {
 //helpers
 
 /* function entangleRunner
- *
+ * parses the JSON string on this sheet,
+ * builds a new entanglelist to update values
+ * and reacquires state by writing to the adjacent cell
  * @param En - Quantum 
  */
 function entangleRunner(En) {
